@@ -40,6 +40,7 @@ metadata:
 data:
   tutorialUrls: |
     [
+      {"name": "RHAI Quickstart Navigation", "url": "https://rhai-code.github.io/rhai-nav-quickstart"},
       {"name": "Voice Agents", "url": "https://eformat.github.io/voice-agents/voice-agents/index.html"},
       {"name": "Rainforest", "url": "https://eformat.github.io/rainforest-docs"},
       {"name": "Special Potato", "url": "https://eformat.github.io/special-potato"},
