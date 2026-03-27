@@ -3,13 +3,13 @@
 # Declare variables to be passed into your templates.
 
 dscinitialization:
-  enabled: false
+  enabled: true
   name: default-dsci
   # serviceMesh:
   #   managementState: Removed
 
 datasciencecluster:
-  enabled: false
+  enabled: true
   name: default-dsc
   apiVersion: datasciencecluster.opendatahub.io/v2
   components:
