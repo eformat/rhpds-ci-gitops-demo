@@ -1,11 +1,11 @@
 operator:
   name: rhods-operator
   namespace: redhat-ods-operator
-  channel: stable
+  channel: beta
   installPlanApproval: Automatic
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  # startingCSV: rhods-operator.x.y.x
+  startingCSV: 3.4.0-ea.1
 
 # Using sub-chart helper-status-checker
 helper-status-checker:

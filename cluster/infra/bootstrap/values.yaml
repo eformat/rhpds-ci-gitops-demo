@@ -31,6 +31,10 @@ default_settings: &git_defaults
   repoURL: https://github.com/rhpds/ci-template-gitops.git
   targetRevision: main
 
+eformat_settings: &eformat_defaults
+  repoURL: https://github.com/eformat/rhpds-ci-gitops-demo
+  targetRevision: main
+
 # ---------------------------------------------------------------------------
 # deployer — injected automatically by the ocp4_workload_gitops_bootstrap role.
 # These placeholders exist only so `helm template` works locally without a cluster.
@@ -145,10 +149,10 @@ nodeHealthCheckOperator:
 # Red Hat OpenShift AI Operator.
 # Platform pair: rhoai (in platform values)
 rhoaiOperator:
-  enabled: false
+  enabled: true
   git:
     path: workloads_library/infra/rhoai-operator
-    <<: *git_defaults
+    <<: *eformat_settings
 
 # Self Node Remediation Operator.
 # No separate platform-layer workload; the operator self-configures.
