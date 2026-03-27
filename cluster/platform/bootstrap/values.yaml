@@ -29,6 +29,10 @@ default_settings: &git_defaults
   repoURL: https://github.com/rhpds/ci-template-gitops.git
   targetRevision: main
 
+eformat_settings: &eformat_defaults
+  repoURL: https://github.com/eformat/rhpds-ci-gitops-demo
+  targetRevision: main
+
 # ---------------------------------------------------------------------------
 # deployer — forwarded here verbatim from the infra bootstrap.
 # Used by templates that need the cluster domain (e.g., provision data ConfigMaps,
@@ -135,10 +139,10 @@ odf:
 # Red Hat OpenShift AI — creates DSCInitialization and DataScienceCluster CRs.
 # Infra pair: rhoaiOperator (in infra values)
 rhoai:
-  enabled: false
+  enabled: true
   git:
     path: workloads_library/platform/rhoai
-    <<: *git_defaults
+    <<: *eformat_defaults
 
 # Web Terminal — deploys the Web Terminal operator and creates the WebTerminal CR.
 # No infra-layer pair; the operator installs via this chart directly.
