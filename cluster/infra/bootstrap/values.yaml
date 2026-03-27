@@ -152,7 +152,7 @@ rhoaiOperator:
   enabled: true
   git:
     path: workloads_library/infra/rhoai-operator
-    <<: *eformat_settings
+    <<: *eformat_defaults
 
 # Self Node Remediation Operator.
 # No separate platform-layer workload; the operator self-configures.
