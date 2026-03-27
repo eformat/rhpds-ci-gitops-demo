@@ -144,6 +144,14 @@ rhoai:
     path: workloads_library/platform/rhoai
     <<: *eformat_defaults
 
+# RHAI Workshop Plugin — OpenShift console plugin for workshop tutorials.
+# No infra-layer pair; deploys directly as a platform workload.
+rhaiWorkshopPlugin:
+  enabled: true
+  git:
+    path: cluster/platform/rhai-workshop-plugin
+    <<: *eformat_defaults
+
 # Web Terminal — deploys the Web Terminal operator and DevWorkspace configuration.
 # No infra-layer pair; the operator installs via this chart directly.
 webTerminal:
