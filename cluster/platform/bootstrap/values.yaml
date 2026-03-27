@@ -144,6 +144,22 @@ rhoai:
     path: workloads_library/platform/rhoai
     <<: *eformat_defaults
 
+# RHAI Code Demo Plugin — OpenShift console plugin for code demos.
+# No infra-layer pair; deploys directly as a platform workload.
+rhaiCodeDemoPlugin:
+  enabled: true
+  git:
+    path: cluster/platform/rhai-code-demo-plugin
+    <<: *eformat_defaults
+
+# RHAI Nav Plugin — OpenShift console navigation plugin.
+# No infra-layer pair; deploys directly as a platform workload.
+rhaiNavPlugin:
+  enabled: true
+  git:
+    path: cluster/platform/rhai-nav-plugin
+    <<: *eformat_defaults
+
 # RHAI Workshop Plugin — OpenShift console plugin for workshop tutorials.
 # No infra-layer pair; deploys directly as a platform workload.
 rhaiWorkshopPlugin:

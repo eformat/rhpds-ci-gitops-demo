@@ -2,16 +2,16 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: rhai-workshop-plugin
+  name: rhai-code-demo-plugin
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: rhai-workshop-plugin
-    app.kubernetes.io/part-of: rhai-workshop-plugin
+    app: rhai-code-demo-plugin
+    app.kubernetes.io/part-of: rhai-code-demo-plugin
   name: nginx-conf
-  namespace: rhai-workshop-plugin
+  namespace: rhai-code-demo-plugin
 data:
   nginx.conf: |
     error_log /dev/stdout info;
@@ -30,35 +30,16 @@ data:
     }
 ---
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app: rhai-workshop-plugin
-    app.kubernetes.io/part-of: rhai-workshop-plugin
-  name: workshop-config
-  namespace: rhai-workshop-plugin
-data:
-  tutorialUrls: |
-    [
-      {"name": "Voice Agents", "url": "https://eformat.github.io/voice-agents/voice-agents/index.html"},
-      {"name": "Rainforest", "url": "https://eformat.github.io/rainforest-docs"},
-      {"name": "Special Potato", "url": "https://eformat.github.io/special-potato"}
-    ]
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: rhai-workshop-plugin
-  namespace: rhai-workshop-plugin
+  name: rhai-code-demo-plugin
+  namespace: rhai-code-demo-plugin
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: rhai-workshop-consolelink-reader
+  name: rhai-code-demo-console-plugin-enabler
 rules:
-- apiGroups: ["console.openshift.io"]
-  resources: ["consolelinks"]
-  verbs: ["get"]
 - apiGroups: ["operator.openshift.io"]
   resources: ["consoles"]
   verbs: ["get", "patch"]
@@ -66,32 +47,32 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: rhai-workshop-consolelink-reader
+  name: rhai-code-demo-console-plugin-enabler
 subjects:
 - kind: ServiceAccount
-  name: rhai-workshop-plugin
-  namespace: rhai-workshop-plugin
+  name: rhai-code-demo-plugin
+  namespace: rhai-code-demo-plugin
 roleRef:
   kind: ClusterRole
-  name: rhai-workshop-consolelink-reader
+  name: rhai-code-demo-console-plugin-enabler
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: rhai-workshop-plugin
-    app.kubernetes.io/component: rhai-workshop-plugin
-    app.kubernetes.io/instance: rhai-workshop-plugin
-    app.kubernetes.io/part-of: rhai-workshop-plugin
-    app.openshift.io/runtime-namespace: rhai-workshop-plugin
-  name: rhai-workshop-plugin
-  namespace: rhai-workshop-plugin
+    app: rhai-code-demo-plugin
+    app.kubernetes.io/component: rhai-code-demo-plugin
+    app.kubernetes.io/instance: rhai-code-demo-plugin
+    app.kubernetes.io/part-of: rhai-code-demo-plugin
+    app.openshift.io/runtime-namespace: rhai-code-demo-plugin
+  name: rhai-code-demo-plugin
+  namespace: rhai-code-demo-plugin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rhai-workshop-plugin
+      app: rhai-code-demo-plugin
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -100,18 +81,18 @@ spec:
   template:
     metadata:
       labels:
-        app: rhai-workshop-plugin
+        app: rhai-code-demo-plugin
     spec:
-      serviceAccountName: rhai-workshop-plugin
+      serviceAccountName: rhai-code-demo-plugin
       initContainers:
-      - name: config-init
+      - name: enable-plugin
         image: registry.redhat.io/openshift4/ose-cli:latest
         command:
         - /bin/sh
         - -c
         - |
           # Enable the console plugin if not already enabled
-          PLUGIN=rhai-workshop-plugin
+          PLUGIN=rhai-code-demo-plugin
           if kubectl get consoles.operator.openshift.io cluster -o jsonpath='{.spec.plugins}' 2>/dev/null | grep -q "$PLUGIN"; then
             echo "Plugin $PLUGIN already enabled"
           else
@@ -119,26 +100,10 @@ spec:
               -p="[{\"op\":\"add\",\"path\":\"/spec/plugins/-\",\"value\":\"$PLUGIN\"}]"
             echo "Plugin $PLUGIN enabled"
           fi
-
-          # Generate config.json
-          OPENSHIFT_AI_URL=$(kubectl get consolelink rhodslink -o jsonpath='{.spec.href}' 2>/dev/null || echo "")
-          TUTORIAL_URLS=$(cat /config/tutorialUrls)
-          cat > /config-out/config.json <<EOF
-          {
-            "openshiftAiUrl": "${OPENSHIFT_AI_URL}",
-            "tutorialUrls": ${TUTORIAL_URLS}
-          }
-          EOF
-        volumeMounts:
-        - mountPath: /config
-          name: workshop-config
-          readOnly: true
-        - mountPath: /config-out
-          name: generated-config
       containers:
-      - image: quay.io/eformat/rhai-workshop-plugin:latest
+      - image: quay.io/eformat/rhai-code-demo-plugin:latest
         imagePullPolicy: Always
-        name: rhai-workshop-plugin
+        name: rhai-code-demo-plugin
         ports:
         - containerPort: 9443
           protocol: TCP
@@ -150,10 +115,6 @@ spec:
           name: nginx-conf
           readOnly: true
           subPath: nginx.conf
-        - mountPath: /usr/share/nginx/html/config.json
-          name: generated-config
-          readOnly: true
-          subPath: config.json
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
@@ -165,12 +126,6 @@ spec:
         configMap:
           defaultMode: 420
           name: nginx-conf
-      - name: workshop-config
-        configMap:
-          defaultMode: 420
-          name: workshop-config
-      - name: generated-config
-        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -178,12 +133,12 @@ metadata:
   annotations:
     service.alpha.openshift.io/serving-cert-secret-name: plugin-serving-cert
   labels:
-    app: rhai-workshop-plugin
-    app.kubernetes.io/component: rhai-workshop-plugin
-    app.kubernetes.io/instance: rhai-workshop-plugin
-    app.kubernetes.io/part-of: rhai-workshop-plugin
-  name: rhai-workshop-plugin
-  namespace: rhai-workshop-plugin
+    app: rhai-code-demo-plugin
+    app.kubernetes.io/component: rhai-code-demo-plugin
+    app.kubernetes.io/instance: rhai-code-demo-plugin
+    app.kubernetes.io/part-of: rhai-code-demo-plugin
+  name: rhai-code-demo-plugin
+  namespace: rhai-code-demo-plugin
 spec:
   ports:
   - name: 9443-tcp
@@ -191,20 +146,20 @@ spec:
     protocol: TCP
     targetPort: 9443
   selector:
-    app: rhai-workshop-plugin
+    app: rhai-code-demo-plugin
   sessionAffinity: None
   type: ClusterIP
 ---
 apiVersion: console.openshift.io/v1
 kind: ConsolePlugin
 metadata:
-  name: rhai-workshop-plugin
+  name: rhai-code-demo-plugin
 spec:
-  displayName: RHAI Workshop Plugin
+  displayName: RHAI Code Demos Console Plugin
   backend:
     type: Service
     service:
       basePath: /
-      name: rhai-workshop-plugin
-      namespace: rhai-workshop-plugin
+      name: rhai-code-demo-plugin
+      namespace: rhai-code-demo-plugin
       port: 9443
