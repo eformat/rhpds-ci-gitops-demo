@@ -144,10 +144,10 @@ rhoai:
     path: workloads_library/platform/rhoai
     <<: *eformat_defaults
 
-# Web Terminal — deploys the Web Terminal operator and creates the WebTerminal CR.
+# Web Terminal — deploys the Web Terminal operator and DevWorkspace configuration.
 # No infra-layer pair; the operator installs via this chart directly.
-webterminal:
-  enabled: false
+webTerminal:
+  enabled: true
   git:
-    path: workloads_library/platform/webterminal
-    <<: *git_defaults
+    path: cluster/platform/web-terminal
+    <<: *eformat_defaults

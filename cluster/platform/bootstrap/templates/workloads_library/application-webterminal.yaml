@@ -1,22 +1,15 @@
-{{ if .Values.webterminal.enabled -}}
+{{ if .Values.webTerminal.enabled -}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: webterminal
+  name: web-terminal
   namespace: openshift-gitops
 spec:
   project: platform
   source:
-    repoURL: {{ .Values.webterminal.git.repoURL }}
-    targetRevision: {{ .Values.webterminal.git.targetRevision }}
-    path: {{ .Values.webterminal.git.path }}
-    helm:
-      values: |
-        operator:
-          {{- if .Values.webterminal.startingCSV }}
-          startingCSV: {{ .Values.webterminal.startingCSV }}
-          {{- end }}
-          installPlanApproval: Automatic
+    repoURL: {{ .Values.webTerminal.git.repoURL }}
+    targetRevision: {{ .Values.webTerminal.git.targetRevision }}
+    path: {{ .Values.webTerminal.git.path }}
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
@@ -27,9 +20,9 @@ spec:
       - SkipDryRunOnMissingResource=true
       - RespectIgnoreDifferences=true
     retry:
-      limit: 10         # Max number of retry attempts
+      limit: 10
       backoff:
-        duration: 5s    # Initial wait time
-        factor: 2       # Multiply wait time by this factor each fail (5s, 10s, 20s...)
-        maxDuration: 3m # Cap the wait time at 3 minutes
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
 {{- end }}
