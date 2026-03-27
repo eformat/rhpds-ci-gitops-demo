@@ -78,7 +78,7 @@ oauth:
     repo: openshift/oauth-proxy
     tag: v4.4
   sarTemplate: >
-    {"namespace": "chat", "resource": "services", "verb": "get"}
+    {"namespace": "openwebui-{{ .Values.tenant.user.name }}", "resource": "services", "verb": "get"}
 
 resources:
   limits:
