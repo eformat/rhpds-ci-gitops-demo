@@ -53,7 +53,7 @@ platform:
   enabled: true
   git:
     path: cluster/platform/bootstrap
-    <<: *git_defaults
+    <<: *eformat_defaults
 
 # ---------------------------------------------------------------------------
 # defaultStorageclass — sets the default StorageClass on the cluster.
