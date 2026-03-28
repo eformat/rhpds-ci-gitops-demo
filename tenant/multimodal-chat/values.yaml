@@ -40,4 +40,3 @@ config:
     Translate the following text to English. Translate the text as concisely as
     possible. Don't add any comment or information. If the text is already in
     English, don't modify it, just copy it without any other mention.
-  llms: []
