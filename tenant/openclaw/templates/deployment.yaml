@@ -39,7 +39,7 @@ spec:
       initContainers:
         - name: init-config
           image: {{ include "openclaw.initImage" . }}
-          imagePullPolicy: IfNotPresent
+          pullPolicy: Always
           {{- if eq .Values.mode "kubernetes" }}
           securityContext:
             runAsUser: 1000
