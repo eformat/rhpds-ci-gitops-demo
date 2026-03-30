@@ -39,7 +39,7 @@ spec:
       initContainers:
         - name: init-config
           image: {{ include "openclaw.initImage" . }}
-          pullPolicy: Always
+          imagePullPolicy: Always
           {{- if eq .Values.mode "kubernetes" }}
           securityContext:
             runAsUser: 1000
@@ -259,7 +259,6 @@ spec:
             - name: GATEWAY_URL
               value: "http://localhost:18789"
             - name: AGENT_ID
-              value: ""
           volumeMounts:
             - name: agent-card-data
               mountPath: /srv/.well-known
