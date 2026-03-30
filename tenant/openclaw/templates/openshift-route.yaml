@@ -8,8 +8,8 @@ metadata:
   annotations:
     haproxy.router.openshift.io/timeout: 30m
 spec:
-  {{- if .Values.clusterDomain }}
-  host: openclaw-{{ .Release.Namespace }}.{{ .Values.clusterDomain }}
+  {{- if or .Values.clusterDomain .Values.deployer.domain }}
+  host: openclaw-{{ .Release.Namespace }}.{{ .Values.clusterDomain | default .Values.deployer.domain }}
   {{- end }}
   to:
     kind: Service

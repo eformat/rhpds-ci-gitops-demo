@@ -139,8 +139,8 @@ as the AES key, so the value must be exactly 16, 24, or 32 bytes.
 Allowed origins for the control UI.
 */}}
 {{- define "openclaw.allowedOrigins" -}}
-{{- if and (eq .Values.mode "openshift") .Values.clusterDomain -}}
-["https://openclaw-{{ .Release.Namespace }}.{{ .Values.clusterDomain }}"]
+{{- if and (eq .Values.mode "openshift") (or .Values.clusterDomain .Values.deployer.domain) -}}
+["https://openclaw-{{ .Release.Namespace }}.{{ .Values.clusterDomain | default .Values.deployer.domain }}"]
 {{- else -}}
 []
 {{- end }}
