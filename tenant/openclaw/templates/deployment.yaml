@@ -157,6 +157,8 @@ spec:
               value: xterm-256color
             - name: NODE_ENV
               value: production
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=1536"
             - name: OPENCLAW_GATEWAY_TOKEN
               valueFrom:
                 secretKeyRef:
