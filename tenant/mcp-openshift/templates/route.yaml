@@ -3,7 +3,7 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: {{ include "kubernetes-mcp-server.fullname" . }}
+  name: mcp-openshift
   namespace: {{ .namespace | default $.Release.Namespace }}
 spec:
   to:
