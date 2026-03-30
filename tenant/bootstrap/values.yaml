@@ -117,6 +117,15 @@ mcpOpenshift:
     image:
       repository: eformat/kubernetes-mcp-server
       pullPolicy: Always
+    rbac:
+      crossNamespaceEdit:
+      - daamclaw
+      - mcp-weather
+      - multimodal-chat
+      - openclaw
+      - openwebui
+      - mcp-openshift
+      - "" # empty string = base user namespace (<tenant.user.name> with no prefix, e.g. "user-x76st")
 
 # ---------------------------------------------------------------------------
 # mcpWeather — MCP Weather Server

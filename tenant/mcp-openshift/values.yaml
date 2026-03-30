@@ -1,3 +1,8 @@
+tenant:
+  name: GUID
+  user:
+    name: USERNAME
+
 # -- Enable OpenShift specific features
 openshift: false
 
@@ -85,6 +90,19 @@ rbac:
   #   roleRef:
   #     name: some-existing-role
   #     external: true  # References the existing "some-existing-role" Role directly
+
+  # -- Cross-namespace RoleBindings that grant the MCP server's ServiceAccount
+  # -- the "edit" ClusterRole in other tenant namespaces.
+  # -- Each entry is a namespace prefix. The full namespace is "<prefix>-<tenant.user.name>"
+  # -- (or just "<tenant.user.name>" if prefix is empty).
+  # -- The ServiceAccount is always the one from this chart's release namespace.
+  crossNamespaceEdit: []
+  # - daamclaw
+  # - mcp-weather
+  # - multimodal-chat
+  # - openclaw
+  # - openwebui
+  # - ""  # empty string = base user namespace (<tenant.user.name> with no prefix, e.g. "user-x76st")
 
 # -- This is for setting Kubernetes Annotations to a Pod.
 # -- For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
